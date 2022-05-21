@@ -3,20 +3,19 @@ package com.becky.controller.cbound;
 import static com.becky.common.Constants.RESULT;
 import static com.becky.common.Constants.SUCCESS;
 
-import com.becky.common.OperationType;
+import com.becky.common.CBoundException;
 import com.becky.controller.cbound.vo.CBoundItemVo;
 import com.becky.controller.cbound.vo.CBoundVo;
 import com.becky.controller.cbound.vo.IdsVo;
 import com.becky.controller.cbound.vo.PairRequestVo;
 import com.becky.entity.CBound;
-import com.becky.service.impl.ICBoundService;
+import com.becky.service.ICBoundService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.boot.convert.PeriodUnit;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +38,7 @@ public class CBoundController {
 
   @ApiOperation(value = "创建 CBound")
   @PostMapping
-  public Map<String, Object> save(CBoundVo cBoundVo) {
+  public Map<String, Object> save(@RequestBody CBoundVo cBoundVo) {
     Map<String, Object> result = new HashMap<>();
 
     CBound cBound = cBoundVo.convert2CBound();
@@ -51,11 +50,11 @@ public class CBoundController {
 
   @ApiOperation(value = "获取 CBound 详情")
   @GetMapping("{id}")
-  public CBoundItemVo getById(@PathVariable("id") Long id) throws Exception {
+  public CBoundItemVo getById(@PathVariable("id") Long id) {
     CBound cBound = cBoundService.get(id);
 
     if (cBound == null) {
-      throw new Exception("找不到资源");
+      throw new CBoundException("找不到资源");
     }
 
     return new CBoundItemVo(cBound);
@@ -63,11 +62,12 @@ public class CBoundController {
 
   @ApiOperation(value = "获取 CBound 列表")
   @GetMapping
-  public List<CBoundItemVo> getList(@RequestParam(value = "name", required = false) String name,
-                                    @RequestParam(value = "operation", required = false) String operation,
-                                    @RequestParam(value = "date", required = false) Long date,
-                                    @RequestParam(value = "pairId", required = false) String pairId,
-                                    @RequestParam(value = "orderBy", required = false) String orderBy) {
+  public List<CBoundItemVo> getList(
+      @RequestParam(value = "name", required = false) String name,
+      @RequestParam(value = "operation", required = false) String operation,
+      @RequestParam(value = "date", required = false) Long date,
+      @RequestParam(value = "pairId", required = false) String pairId,
+      @RequestParam(value = "orderBy", required = false) String orderBy) {
 
     List<CBound> cBounds = cBoundService.getList(name, operation, date, pairId, orderBy);
 
@@ -93,12 +93,12 @@ public class CBoundController {
   @ApiOperation(value = "修改 CBound")
   @PutMapping("/{id}")
   public Map<String, Object> put(@PathVariable("id") Long id,
-                                 @RequestBody CBoundVo cBoundVo) throws Exception {
+                                 @RequestBody CBoundVo cBoundVo) {
     Map<String, Object> result = new HashMap<>();
 
     CBound cBound = cBoundService.get(id);
     if (cBound == null) {
-      throw new Exception("数据不存在");
+      throw new CBoundException("数据不存在");
     }
     cBoundVo.merge(cBound);
     cBoundService.update(cBound);
@@ -109,25 +109,25 @@ public class CBoundController {
 
   @ApiOperation(value = "创建 CBound 匹配")
   @PutMapping("/pairs")
-  public Map<String, Object> putPairs(@RequestBody PairRequestVo pairRequestVo) throws Exception {
+  public Map<String, Object> putPairs(@RequestBody PairRequestVo pairRequestVo) {
     Map<String, Object> result = new HashMap<>();
 
     Long inId = pairRequestVo.getInId();
     if (inId == null) {
-      throw new Exception("参数错误");
+      throw new CBoundException("参数错误");
     }
     Long outId = pairRequestVo.getOutId();
     if (inId == null) {
-      throw new Exception("参数错误");
+      throw new CBoundException("参数错误");
     }
 
     CBound inCBound = cBoundService.get(inId);
     if (inCBound == null) {
-      throw new Exception("数据不存在");
+      throw new CBoundException("数据不存在");
     }
     CBound outCBound = cBoundService.get(outId);
     if (outCBound == null) {
-      throw new Exception("数据不存在");
+      throw new CBoundException("数据不存在");
     }
 
     cBoundService.updatePairs(inId, outId);

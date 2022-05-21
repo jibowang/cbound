@@ -3,6 +3,7 @@ package com.becky.service.impl;
 import com.becky.common.OperationType;
 import com.becky.entity.CBound;
 import com.becky.repository.CBoundRepository;
+import com.becky.service.ICBoundService;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;

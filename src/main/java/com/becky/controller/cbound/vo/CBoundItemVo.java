@@ -2,8 +2,6 @@ package com.becky.controller.cbound.vo;
 
 import com.becky.entity.CBound;
 import java.io.Serializable;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +21,7 @@ public class CBoundItemVo implements Serializable {
   private Long date;
   private String pairId;
 
-  public CBoundItemVo (CBound cBound) {
+  public CBoundItemVo(CBound cBound) {
     this.id = cBound.getId();
     this.name = cBound.getName();
     this.operation = cBound.getOperation().getType();
