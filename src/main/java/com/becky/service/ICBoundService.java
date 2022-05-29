@@ -9,7 +9,7 @@ public interface ICBoundService {
 
   CBound get(Long id);
 
-  List<CBound> getList(String name, String operation, Long date, String pairId, String orderBy);
+  List<CBound> getList(String name, String operation, Long date, String pairId, String orderBy, String order);
 
   void delete(List<Long> ids);
 

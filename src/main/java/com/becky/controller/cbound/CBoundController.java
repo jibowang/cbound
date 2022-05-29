@@ -67,9 +67,10 @@ public class CBoundController {
       @RequestParam(value = "operation", required = false) String operation,
       @RequestParam(value = "date", required = false) Long date,
       @RequestParam(value = "pairId", required = false) String pairId,
-      @RequestParam(value = "orderBy", required = false) String orderBy) {
+      @RequestParam(value = "orderBy", required = false) String orderBy,
+      @RequestParam(value = "order", required = false) String order) {
 
-    List<CBound> cBounds = cBoundService.getList(name, operation, date, pairId, orderBy);
+    List<CBound> cBounds = cBoundService.getList(name, operation, date, pairId, orderBy, order);
 
     List<CBoundItemVo> cBoundItemVos = new ArrayList<>();
     for (CBound cBound : cBounds) {

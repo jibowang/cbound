@@ -5,8 +5,11 @@ import com.becky.entity.CBound;
 import com.becky.repository.CBoundRepository;
 import com.becky.service.ICBoundService;
 import java.util.List;
+import javax.persistence.criteria.Order;
 import javax.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,11 +32,13 @@ public class CBoundServiceImpl implements ICBoundService {
   }
 
   @Override
-  public List<CBound> getList(String name, String operation, Long date, String pairId, String orderBy) {
+  public List<CBound> getList(String name, String operation, Long date, String pairId, String sortBy, String sort) {
     OperationType operationType = OperationType.from(operation);
-    orderBy = StringUtils.isBlank(orderBy) ? "create_time" : orderBy;
 
-    return cBoundRepository.getList(name, operationType, date, pairId, orderBy);
+    sortBy = StringUtils.isBlank(sortBy) ? "createTime" : sortBy;
+    sort = StringUtils.isBlank(sort) ? "asc" : sort;
+
+    return cBoundRepository.getList(name, operationType, date, pairId, Sort.by(Direction.fromString(sort), sortBy));
   }
 
   @Override
